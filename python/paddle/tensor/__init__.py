@@ -240,6 +240,7 @@ from .math import (  # noqa: F401
     bitwise_right_shift,
     bitwise_right_shift_,
     broadcast_shape,
+    cartesian_prod,
     ceil,
     ceil_,
     clip,
@@ -812,6 +813,7 @@ tensor_method_func = [
     'masked_scatter_',
     "combinations",
     'signbit',
+    'cartesian_prod',
 ]
 
 # this list used in math_op_patch.py for magic_method bind
