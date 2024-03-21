@@ -7686,7 +7686,7 @@ def cartesian_prod(*x, name=None):
     
     if isinstance(x, tuple):
         input_list = list(x)
-    elif isinstance(x, paddle.Tensor):
+    elif isinstance(x, (paddle.Tensor, Variable)):
         if len(x.shape) != 2:
             raise ValueError(f"Expect a 2D vector and dim=1 as a num of tensor, but got shape {x.shape}.")
         input_list = paddle.chunk(x, x.shape[0], axis=0)
