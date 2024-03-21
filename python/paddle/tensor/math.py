@@ -7679,3 +7679,23 @@ def signbit(x, name=None):
     x = paddle.sign(neg_zero_x)
     out = paddle.cast(x < 0, dtype='bool')
     return out
+
+
+def cartesian_prod(*x, name=None):
+    import itertools
+    
+    if isinstance(x, tuple):
+        input_list = list(x)
+    elif isinstance(x, paddle.Tensor):
+        if len(x.shape) != 2:
+            raise ValueError(f"Expect a 2D vector and dim=1 as a num of tensor, but got shape {x.shape}.")
+        input_list = paddle.chunk(x, x.shape[0], axis=0)
+    else:
+        raise ValueError(f"Invalid input, please retry.")
+    
+    iter_tensor = itertools.product(*input_list)
+    tensor_list = []
+    for tensor in iter_tensor:
+        tensor_list.append(paddle.stack(tensor, axis=0))
+        
+    return paddle.stack(tensor_list, axis=0)
