@@ -7684,16 +7684,22 @@ def signbit(x, name=None):
 def cartesian_prod(*x, name=None):
     import itertools
 
-    if isinstance(x, tuple):
-        input_list = list(x)
-    elif isinstance(x, (paddle.Tensor, Variable)):
-        if len(x.shape) != 2:
-            raise ValueError(
-                f"Expect a 2D vector and dim=1 as a num of tensor, but got shape {x.shape}."
-            )
-        input_list = paddle.chunk(x, x.shape[0], axis=0)
+    assert isinstance(x, tuple), "Invalid input, please retry."
+
+    if len(x) == 1:
+        tensor = x[0]
+        if isinstance(tensor, (paddle.Tensor, Variable)):
+            if len(tensor.shape) != 2:
+                raise ValueError(
+                    f"Expect a 2D vector and dim=1 as a num of tensor, but got shape {x.shape}."
+                )
+            input_list = paddle.chunk(tensor, tensor.shape[0], axis=0)
+            input_list = [paddle.squeeze(t) for t in input_list]
+        elif isinstance(tensor, list):
+            input_list = list(tensor)
     else:
-        raise ValueError("Invalid input, please retry.")
+        input_list = list(x)
+        
 
     iter_tensor = itertools.product(*input_list)
     tensor_list = []
